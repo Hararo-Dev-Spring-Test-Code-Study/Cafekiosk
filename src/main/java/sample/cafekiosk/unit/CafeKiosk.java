@@ -20,7 +20,7 @@ public class CafeKiosk {
     private final List<Beverage> beverages = new ArrayList<>();
 
     // add : 음료 1잔 추가
-    public void add(Beverage beverage, int count) {
+    public void add(Beverage beverage) {
         beverages.add(beverage);
     }
 
@@ -29,7 +29,9 @@ public class CafeKiosk {
         if(count <= 0) {
             throw new IllegalArgumentException("음료는 1잔 이상 주문해야합니다.");
         } else {
-            beverages.add(beverage);
+            for (int i = 0; i < count; i++) {
+                beverages.add(beverage);
+            }
         }
     }
 
