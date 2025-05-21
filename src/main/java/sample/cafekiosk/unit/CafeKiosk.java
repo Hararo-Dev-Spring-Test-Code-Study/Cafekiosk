@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 public class CafeKiosk {
     private static final Logger log = LoggerFactory.getLogger(CafeKiosk.class);
+    // 매장 오픈 시간 : 10시 / 매장 마감 시간 : 22시
     private static final LocalTime SHOP_OPEN_TIME = LocalTime.of(10, 0, 0);
     private static final LocalTime SHOP_CLOSE_TIME = LocalTime.of(22, 0, 0);
 
@@ -60,7 +61,7 @@ public class CafeKiosk {
     }
 
     // createOrder : 주문 생성
-    public Order createOrder() {
+    public Order createOrder(LocalDateTime localDateTime) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalTime currentTime = currentDateTime.toLocalTime();
 

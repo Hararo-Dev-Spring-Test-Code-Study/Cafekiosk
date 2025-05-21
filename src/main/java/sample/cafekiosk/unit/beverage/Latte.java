@@ -4,7 +4,6 @@ public class Latte implements Beverage {
 
     // 라떼, 4500원
 
-
     @Override
     public String getName() {
         return "라떼";
