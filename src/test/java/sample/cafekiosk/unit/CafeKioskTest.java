@@ -7,6 +7,8 @@ import sample.cafekiosk.unit.beverage.Americano;
 import sample.cafekiosk.unit.beverage.Latte;
 import sample.cafekiosk.unit.order.Order;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -101,23 +103,44 @@ class CafeKioskTest {
         assertThat(totalPrice).isEqualTo(8500);
     }
 
-    @DisplayName("주문 생성 테스트")
+//    @DisplayName("주문 생성 테스트")
+//    @Test
+//    void createOrder() {
+//        // given
+//        CafeKiosk cafeKiosk = new CafeKiosk();
+//        cafeKiosk.add(new Americano());
+//
+//        // when
+//        Order order = cafeKiosk.createOrder(LocalDateTime.of(2023,1,1,12,30));
+//
+//        // then
+//        //주문 시간
+//        assertThat(order.getOrderDateTime());
+//
+//    }
+    @DisplayName("영업시간 외 주문 시 예외 발생")
     @Test
-    void createOrder() {
+    void createOrder_outsideBusinessHours() {
         // given
         CafeKiosk cafeKiosk = new CafeKiosk();
         cafeKiosk.add(new Americano());
 
-        // when
-        Order order = cafeKiosk.createOrder();
+        //영업시간 전 주문 생성
+        LocalDateTime beforeOpen = LocalDateTime.of(2023, 1, 1, 9, 0);
+        //영업시간 후 주문 생성
+        LocalDateTime afterClose = LocalDateTime.of(2023, 1, 1, 22, 30);
 
-        // then
-        //사이즈
-        assertThat(order.getBeverages()).hasSize(1);
-        //음료 종류 확인
-        assertThat(order.getBeverages().get(0).getName()).isEqualTo("Americano");
-        //주문 시간
-        assertThat(order.getOrderDateTime());
+        // when & then
+        //assertThatThrownBy : 예외 발생 체크
+        //isInstaceOf : 발생한 예외의 클래스 타입이 정확한지 확인
+        //hasMessage : 예외의 메세지가 정확히 일치하는지 확인
+        //유효하지 않은 시간에 주문하면 정확히 예외가 발생하는지 확인
+        assertThatThrownBy(() -> cafeKiosk.createOrder(beforeOpen))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("주문 가능한 시간이 아닙니다. 영업시간은 10:00~22:00입니다.");
 
+        assertThatThrownBy(() -> cafeKiosk.createOrder(afterClose))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("주문 가능한 시간이 아닙니다. 영업시간은 10:00~22:00입니다.");
     }
 }

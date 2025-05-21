@@ -1,16 +1,20 @@
 package sample.cafekiosk.unit;
 
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sample.cafekiosk.unit.beverage.Beverage;
 import sample.cafekiosk.unit.order.Order;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class CafeKiosk {
-
+    private static final LocalTime OPEN_TIME = LocalTime.of(10, 0);
+    private static final LocalTime CLOSE_TIME = LocalTime.of(22, 0);
     private final List<Beverage> beverages = new ArrayList<>();
 
     // add : 음료 1잔 추가
@@ -60,8 +64,12 @@ public class CafeKiosk {
     }
 
     // createOrder : 주문 생성
-    public Order createOrder() {
-
-        return new Order(LocalDateTime.now(), beverages);
+    public Order createOrder(LocalDateTime orderDateTime) {
+        //LocalDateTime과 LocalTime을 비교하려고 할 때 발생하는 타입 불일치 오류가 발생하므로 toLocalTime()으로 변환해줘야함
+        LocalTime orderTime = orderDateTime.toLocalTime();
+        if (orderTime.isBefore(OPEN_TIME) || orderTime.isAfter(CLOSE_TIME)) {
+            throw new IllegalArgumentException("주문 가능한 시간이 아닙니다. 영업시간은 10:00~22:00입니다.");
+        }
+        return new Order(orderDateTime, beverages);
     }
 }
