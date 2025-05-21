@@ -9,10 +9,15 @@ class AmericanoTest {
 
     @Test
     void getName() {
+        Americano americano=new Americano();
+
+        assertThat(americano.getName().equals("Americano"));
     }
 
     @Test
     void getPrice() {
-    }
+        Americano americano=new Americano();
 
+        assertThat(americano.getPrice()==4000);
+    }
 }

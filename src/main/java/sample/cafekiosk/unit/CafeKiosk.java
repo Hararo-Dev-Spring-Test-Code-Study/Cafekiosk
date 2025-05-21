@@ -61,6 +61,7 @@ public class CafeKiosk {
 
     // createOrder : 주문 생성
     public Order createOrder() {
+
         return new Order(LocalDateTime.now(), beverages);
     }
 }
