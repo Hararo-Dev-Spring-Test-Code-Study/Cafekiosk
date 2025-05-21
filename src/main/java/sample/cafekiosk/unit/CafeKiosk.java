@@ -50,7 +50,11 @@ public class CafeKiosk {
     }
 
     // createOrder : 주문 생성
-    public Order createOrder() {
-        return new Order(LocalDateTime.now(), beverages);
+    // LocalDateTime은 테스트하기 어려워서 외부로 빼서 주문 생성 메서드를 작성하는게 좋음
+//    public Order createOrder() {
+//        return new Order(LocalDateTime.now(), beverages);
+//    }
+    public Order createOrder(LocalDateTime orderTime) {
+        return new Order(orderTime, beverages);
     }
 }
