@@ -3,7 +3,7 @@ package sample.cafekiosk.unit.beverage;
 public class Latte implements Beverage {
     @Override
     public String getName() {
-        return "Latte";
+        return "라떼";
     }
 
     @Override

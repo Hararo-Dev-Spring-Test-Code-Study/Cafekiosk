@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CafeKioskTest {
 
 
-    @DisplayName("음료 1잔 추가 테스트")
+    @DisplayName("고객이 음료를 1잔 추가하면 주문 목록에 해당 음료가 포함된다")
     @Test
     void add() {
         // given
@@ -26,10 +26,10 @@ class CafeKioskTest {
 
         // then
         assertThat(cafeKiosk.getBeverages()).hasSize(1);
-        assertThat(cafeKiosk.getBeverages().get(0).getName()).isEqualTo("Americano");
+        assertThat(cafeKiosk.getBeverages().get(0).getName()).isEqualTo("아메리카노");
     }
 
-    @DisplayName("음료 여러 잔 추가 테스트")
+    @DisplayName("고객이 동일한 음료를 여러 잔 추가하면 주문 목록에 순차적으로 추가된다")
     @Test
     void addSeveralBeverages() {
         // given
@@ -45,10 +45,10 @@ class CafeKioskTest {
         // 메뉴확인
         assertThat(cafeKiosk.getBeverages())
                 .extracting(beverage -> beverage.getName())
-                .containsExactly("Americano", "Americano", "Americano");
+                .containsExactly("아메리카노", "아메리카노", "아메리카노");
     }
 
-    @DisplayName("음료 삭제 테스트")
+    @DisplayName("주문 목록에서 음료를 제거하면 해당 음료가 하나만 제거된다")
     @Test
     void remove() {
         // given
@@ -65,10 +65,10 @@ class CafeKioskTest {
         //아메리카노 1개는 남아있어야 하므로 size 1인지 확인, 항목확인
         assertThat(cafeKiosk.getBeverages()).hasSize(1);
         //남은 항목이 아메리카노가 맞는지 확인
-        assertThat(cafeKiosk.getBeverages().get(0).getName().equals("Americano"));
+        assertThat(cafeKiosk.getBeverages().get(0).getName().equals("아메리카노"));
     }
 
-    @DisplayName("주문 전체 삭제 테스트")
+    @DisplayName("주문 목록을 초기화하면 모든 음료가 제거되어 빈 목록이 된다")
     @Test
     void clear() {
         // given
@@ -86,7 +86,7 @@ class CafeKioskTest {
         assertThat(cafeKiosk.getBeverages()).isEmpty();
     }
 
-    @DisplayName("총 금액 계산 테스트")
+    @DisplayName("주문한 모든 음료의 가격을 합산하여 총 주문 금액을 계산할 수 있다")
     @Test
     void calculateTotalPrice() {
         // given
@@ -118,7 +118,7 @@ class CafeKioskTest {
 //        assertThat(order.getOrderDateTime());
 //
 //    }
-    @DisplayName("영업시간 외 주문 시 예외 발생")
+    @DisplayName("주문 시점이 영업시간을 벗어나면 예외가 발생하여 주문이 거부된다")
     @Test
     void createOrder_outsideBusinessHours() {
         // given
