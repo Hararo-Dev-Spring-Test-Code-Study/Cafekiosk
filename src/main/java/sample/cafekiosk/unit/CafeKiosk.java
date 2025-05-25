@@ -57,11 +57,13 @@ public class CafeKiosk {
         //        totalPrice += beverage.getPrice();
         //    }
         //    return totalPrice;
-        // 리스트 요소를 순회하며 금액을 계산하는걸 stream함수를 써서 계산
+        // 리스트 요소를 순회하며 금액을 계산하는걸 stream 써서 계산
     }
 
     // createOrder : 주문 생성
     public Order createOrder(LocalDateTime localDateTime) {
+        // 여기에 LocalDateTime은 테스트하기 어려운 부분이다.
+        // 그래서 LocalDateTime을 외부로 빼내서 주문 생성 메서드를 작성함 -> 테스트하기 쉬워짐
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalTime currentTime = currentDateTime.toLocalTime();
 
