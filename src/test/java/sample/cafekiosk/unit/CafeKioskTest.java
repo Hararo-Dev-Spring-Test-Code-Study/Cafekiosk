@@ -25,7 +25,7 @@ class CafeKioskTest {
         latte = new Latte();
     }
 
-    @DisplayName("아메리카노 1잔을 추가한다.")
+    @DisplayName("음료 1잔을 추가하면 주문 목록에 포함되고 총 금액에 반영된다.")
     @Test
     void add() {
         // when
@@ -37,7 +37,7 @@ class CafeKioskTest {
         assertThat(cafeKiosk.getBeverages().get(0).getClass()).isEqualTo(Americano.class);  // 첫번째 객체 class 확인
     }
 
-    @DisplayName("아메리카노 3잔, 라떼 2잔을 추가한다.")
+    @DisplayName("음료를 여러잔 추가하면 모든 음료가 주문 목록에 포함되고 총 금액에 반영된다.")
     @Test
     void addSeveralBeverages() {
         // when
@@ -57,7 +57,7 @@ class CafeKioskTest {
                 .containsExactly(Americano.class, Americano.class, Americano.class, Latte.class, Latte.class);
     }
 
-    @DisplayName("아메리카노 한잔을 취소한다.")
+    @DisplayName("특정 음료를 제거하면 주문 목록에서 삭제되고 총 금액에 반영된다.")
     @Test
     void remove() {
         // given
@@ -74,10 +74,11 @@ class CafeKioskTest {
                 // beverage의 이름으로 비교
                 .extracting(Beverage::getName)
                 .contains("라떼")
+                .doesNotContain("아메리카노")
                 .containsExactly("라떼", "라떼");
     }
 
-    @DisplayName("주문하지 않은 음료를 삭제하면 예외가 발생한다.")
+    @DisplayName("목록에 추가되지 않은 음료를 제거하면 예외가 발생한다.")
     @Test
     void removeNotOrderedBeverage() {
         // when
@@ -89,7 +90,7 @@ class CafeKioskTest {
                 .hasMessage("주문 하지 않은 음료입니다.");
     }
 
-    @DisplayName("주문을 모두 취소한다.")
+    @DisplayName("주문 목록의 모든 음료가 삭제되고 총 금액은 0원이 된다.")
     @Test
     void clear() {
         // given
@@ -104,7 +105,7 @@ class CafeKioskTest {
         assertThat(cafeKiosk.getBeverages().isEmpty()).isTrue();
     }
 
-    @DisplayName("최종 주문 금액을 확인한다")
+    @DisplayName("주문 목록의 음료 가격이 총 금액으로 계산된다.")
     @Test
     void calculateTotalPrice() {
         // given
@@ -130,7 +131,7 @@ class CafeKioskTest {
 //        // then
 //        assertThat(order.getBeverages().size()).isEqualTo(2);
 //    }
-    @DisplayName("아메리카노 2잔 주문을 생성한다.")
+    @DisplayName("영업 시간 내에 주문하면 주문이 생성된다.")
     @Test
     void createOrder() {
         // given
