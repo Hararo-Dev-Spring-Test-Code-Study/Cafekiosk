@@ -21,7 +21,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 //JUnit 테스트 메서드는 반드시 void 리턴형이고 매개변수가 없어야 함
 class CafeKioskTest {
 
-    @DisplayName("음료 1개 추가하면 음료 리스트에 해당 음료가 포함된다")
+//    @DisplayName("음료 1개 추가하면 음료 리스트에 해당 음료가 포함된다")
+    @DisplayName("음료 한 개를 추가하면 해당 음료가 주문 목록에 추가된다.")
     @Test
     void addOneBeverage() {
         // given
@@ -35,7 +36,8 @@ class CafeKioskTest {
         assertThat(kiosk.getBeverages().get(0).getClass()).isEqualTo(Americano.class);
     }
 
-    @DisplayName("여러 개의 음료를 추가하면 모든 음료가 순서대로 주문 음료 리스트에 포함된다")
+//    @DisplayName("여러 개의 음료를 추가하면 모든 음료가 순서대로 주문 음료 리스트에 포함된다")
+    @DisplayName("여러 개의 음료를 추가하면 여러 잔의 음료가 순서대로 주문 목록에 추가된다.")
     @Test
 //    void addSeveralBeverages() {
     void addSeveralBeverages() {
@@ -58,7 +60,8 @@ class CafeKioskTest {
                                 Latte.class, Latte.class);
     }
 
-    @DisplayName("음료를 한 개 추가한 후 제거하면 주문 음료 리스트에서 해당 음료가 삭제된다")
+//    @DisplayName("음료를 한 개 추가한 후 제거하면 주문 음료 리스트에서 해당 음료가 삭제된다")
+    @DisplayName("주문 목록에 담긴 음료 한 개를 제거하면 해당 음료가 주문 목록에서 삭제된다.")
     @Test
     void remove() {
         // given
@@ -73,7 +76,8 @@ class CafeKioskTest {
         assertThat(kiosk.getBeverages()).isEmpty();
     }
 
-    @DisplayName("여러 개의 음료를 추가한 후 clear를 호출하면 음료 리스트가 비워진다")
+//    @DisplayName("여러 개의 음료를 추가한 후 clear를 호출하면 음료 리스트가 비워진다")
+    @DisplayName("주문 목록 전체를 비우는 기능을 사용하면 모든 음료들이 주문 목록에서 삭제된다.")
     @Test
     void clear() {
         // given
@@ -88,7 +92,8 @@ class CafeKioskTest {
         assertThat(kiosk.getBeverages()).isEmpty();
     }
 
-    @DisplayName("주문 음료들의 가격 합계를 정확히 계산한다")
+//    @DisplayName("주문 음료들의 가격 합계를 정확히 계산한다")
+    @DisplayName("주문 목록에 담긴 음료의 총 가격을 정확하게 계산할 수 있다.")
     @Test
     void calculateTotalPrice() {
         // given
@@ -103,7 +108,8 @@ class CafeKioskTest {
         assertThat(totalPrice).isEqualTo(8500);
     }
 
-    @DisplayName("주문 생성 시 현재 주문 음료 리스트를 기준으로 주문이 만들어진다")
+//    @DisplayName("주문 생성 시 현재 주문 음료 리스트를 기준으로 주문이 만들어진다")
+    @DisplayName("주문 생성 기능을 사용하면 현재 주문 목록에 담긴 음료들의 순서대로 주문이 생성된다.")
     @Test
     void createOrder() {
         // given
@@ -121,7 +127,8 @@ class CafeKioskTest {
                 .containsExactly(Americano.class, Latte.class);
     }
 
-    @DisplayName("주문 생성 시 생성 요청 시점의 시간이 주문에 기록된다")
+//    @DisplayName("주문 생성 시 생성 요청 시점의 시간이 주문에 기록된다")
+    @DisplayName("주문이 생성될 때 주문 시각은 해당 주문이 생성된 시점으로 기록된다.")
     @Test
     void createOrderTime() {
         // given
