@@ -11,6 +11,4 @@ public class Latte implements Beverage {
         return 4500;
     }
 
-    // 라떼, 4500원
-
 }

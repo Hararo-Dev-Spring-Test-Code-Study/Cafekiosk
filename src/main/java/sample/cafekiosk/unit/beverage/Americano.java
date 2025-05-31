@@ -11,6 +11,5 @@ public class Americano implements Beverage {
         return 4000;
     }
 
-    // 아메리카노, 4000원
 
 }
