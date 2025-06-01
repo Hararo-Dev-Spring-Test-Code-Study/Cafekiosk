@@ -29,7 +29,7 @@ public class CafeKiosk {
     public void remove(Beverage beverage) {
         if (beverages.contains(beverage))
             beverages.remove(beverage);
-        // 주문하지 않은 음료 삭제
+            // 주문하지 않은 음료 삭제
         else {
             throw new IllegalArgumentException("주문 하지 않은 음료입니다.");
         }
