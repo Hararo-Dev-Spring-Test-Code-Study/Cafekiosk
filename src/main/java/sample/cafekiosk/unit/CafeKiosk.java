@@ -1,16 +1,19 @@
 package sample.cafekiosk.unit;
 
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sample.cafekiosk.unit.beverage.Beverage;
 import sample.cafekiosk.unit.order.Order;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class CafeKiosk {
-
+    private static final Logger log = LoggerFactory.getLogger(CafeKiosk.class);
     private final List<Beverage> beverages = new ArrayList<>();
 
     // add : 음료 1잔 추가
