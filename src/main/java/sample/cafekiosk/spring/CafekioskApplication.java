@@ -3,6 +3,9 @@ package sample.cafekiosk.spring;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
+@EnableJpaAuditing
 //이 클래스가 Spring Boot 어플리케이션의 시작점이라는 선언
 //이 클래스의 패키지부터 하위 구조를 스캔해서 필요한 모든 것들을 자동으로 구성
 // @SpringBootApplication은 아래 세가지 annotation이 합쳐진것

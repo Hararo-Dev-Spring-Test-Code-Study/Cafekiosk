@@ -20,10 +20,16 @@ repositories {
 
 dependencies {
     // Spring boot
+
+    // 웹 개발에 필요한 기본적인 라이브러리 제공(REST API만들 때 필요)
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // JPA를 사용하기 위한 라이브러리(DB 연동, 엔티티 관리 등)
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // test
+
+    // 테스트 코드를 작성하고 실행하기 위한 라이브러리(JUnit, Spring TestContext Framework 등)
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // lombok
