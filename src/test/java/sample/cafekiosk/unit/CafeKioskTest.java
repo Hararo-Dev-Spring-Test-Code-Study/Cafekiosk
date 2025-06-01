@@ -23,7 +23,7 @@ class CafeKioskTest {
 
         // then
         assertThat(kiosk.getBeverages()).hasSize(1);
-        assertThat(kiosk.getBeverages().get(0).getName()).isEqualTo("Americano");
+        assertThat(kiosk.getBeverages().get(0).getName()).isEqualTo("아메리카노");
     }
 
     @DisplayName("같은 음료를 여러 잔 추가하면 해당 수만큼 리스트에 담긴다.")
@@ -33,11 +33,11 @@ class CafeKioskTest {
         CafeKiosk kiosk = new CafeKiosk();
 
         // when
-        kiosk.addSeveralBeverages(new Latte(), 3);
+        kiosk.addSeveralBeverages(new Latte(), 5);
 
         // then
-        assertThat(kiosk.getBeverages()).hasSize(3);
-        assertThat(kiosk.getBeverages().get(0).getName()).isEqualTo("Latte");
+        assertThat(kiosk.getBeverages()).hasSize(5);
+        assertThat(kiosk.getBeverages().get(0).getName()).isEqualTo("라뗴");
     }
 
     @DisplayName("리스트에서 음료 1개를 삭제할 수 있다.")
@@ -91,7 +91,7 @@ class CafeKioskTest {
         // given
         CafeKiosk kiosk = new CafeKiosk();
         kiosk.add(new Americano());
-        LocalDateTime time = LocalDateTime.of(2023, 1, 1, 10, 0);
+        LocalDateTime time = LocalDateTime.of(2025, 5, 21, 10, 30);
 
         // when
         Order order = kiosk.createOrder(time);

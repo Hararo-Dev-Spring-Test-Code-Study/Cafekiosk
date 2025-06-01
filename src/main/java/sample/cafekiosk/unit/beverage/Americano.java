@@ -5,7 +5,7 @@ public class Americano implements Beverage {
     // 아메리카노, 4000원
     @Override
     public String getName() {
-        return "Americano";
+        return "아메리카노";
     }
 
     @Override
