@@ -29,7 +29,7 @@ class OrderTest {
         assertThat(order.getTotalPrice()).isEqualTo(3000);
     }
 
-    @DisplayName("주문 생성 시 주문 상태는 INT이다.")
+    @DisplayName("주문 생성 시 주문 상태는 INIT이다.")
     @Test
     void init() {
         // given
