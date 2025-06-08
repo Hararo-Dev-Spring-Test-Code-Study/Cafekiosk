@@ -18,10 +18,10 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     @Transactional
-    public Order createOrder(List<String> productNumbers) {
+    public Order createOrder(List<String> productNumbers,LocalDateTime registeredDateTime) {
         List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
 
-        Order order = new Order(products, LocalDateTime.now());
+        Order order = new Order(products, registeredDateTime); //시간주입
         return orderRepository.save(order);
     }
 }

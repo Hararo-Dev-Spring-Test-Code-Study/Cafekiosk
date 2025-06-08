@@ -11,6 +11,8 @@ import sample.cafekiosk.spring.domain.product.ProductRepository;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,13 +48,14 @@ public class OrderServiceTest {
                 .build());
 
         List<String> productNumbers = List.of("001", "002");
-
+        //고정시간
+        LocalDateTime fixedTime=LocalDateTime.of(2025,6,1,12,0);
         // when
-        Order order = orderService.createOrder(productNumbers);
+        Order order = orderService.createOrder(productNumbers,fixedTime);
 
         // then
         assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.IN_PROGRESS);
-        assertThat(order.getRegisteredDateTime()).isNotNull();
+        assertThat(order.getRegisteredDateTime()).isEqualTo(fixedTime); //시간검증
         assertThat(order.getProducts()).hasSize(2);
         assertThat(order.getTotalPrice()).isEqualTo(4000);
     }

@@ -6,6 +6,8 @@ import sample.cafekiosk.spring.api.service.order.OrderService;
 import sample.cafekiosk.spring.api.service.order.request.CreateOrderRequest;
 import sample.cafekiosk.spring.domain.order.Order;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,6 +19,7 @@ public class OrderController {
 
     @PostMapping
     public Order createOrder(@RequestBody CreateOrderRequest request) {
-        return orderService.createOrder(request.getProductNumbers());
+        LocalDateTime now=LocalDateTime.now(); //현재시각생성
+        return orderService.createOrder(request.getProductNumbers(),now);
     }
 }
