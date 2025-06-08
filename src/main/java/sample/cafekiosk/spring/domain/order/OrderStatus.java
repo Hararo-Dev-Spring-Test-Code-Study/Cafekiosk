@@ -1,0 +1,19 @@
+package sample.cafekiosk.spring.domain.order;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum OrderStatus {
+
+    // 상상으로 만든 주문
+    INIT("주문생성"),
+    CANCELED("주문취소"),
+    PAYMENT_COMPLETED("결제완료"),
+    RECEIVED("주문접수"),
+    COMPLETED("처리완료");
+
+    private final String text;
+
+}

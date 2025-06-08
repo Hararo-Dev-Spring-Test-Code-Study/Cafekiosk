@@ -63,7 +63,6 @@ class ProductRepositoryTest {
                 .containsExactlyInAnyOrder(
                         tuple("001", "아메리카노", SELLING),
                         tuple("002", "카페라떼", HOLD)
-
                 );
     }
 }
