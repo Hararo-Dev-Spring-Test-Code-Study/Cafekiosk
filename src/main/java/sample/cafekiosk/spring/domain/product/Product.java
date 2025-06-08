@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sample.cafekiosk.spring.domain.BaseEntity;
+import sample.cafekiosk.spring.domain.order.Order;
 
 import javax.persistence.*;
 
@@ -27,6 +28,11 @@ public class Product extends BaseEntity {
     private String name;
 
     private int price;
+
+    // 주문:상품 1:N 관계 맵핑
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     @Builder
     private Product(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, int price) {
