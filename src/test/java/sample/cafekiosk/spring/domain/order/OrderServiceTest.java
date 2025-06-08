@@ -74,5 +74,7 @@ public class OrderServiceTest {
                         tuple("001", "아메리카노", 4000),
                         tuple("003", "크루아상", 3500)
                 );
+        assertThat(response.getOrderDateTime()).isEqualTo(orderTime);
+        assertThat(response.getStatus()).isEqualTo(OrderStatus.ORDER);
     }
 }
