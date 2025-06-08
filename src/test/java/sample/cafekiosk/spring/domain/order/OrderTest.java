@@ -3,6 +3,7 @@ package sample.cafekiosk.spring.domain.order;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import sample.cafekiosk.spring.domain.product.Product;
+import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
 
 import java.time.LocalDateTime;
@@ -42,7 +43,7 @@ class OrderTest {
         LocalDateTime registeredDateTime = LocalDateTime.now();
 
         // when
-        Order order = Order.create(products, registeredDateTime);
+        Order order = Order.createWithProducts(products, registeredDateTime);
 
         // then
         assertThat(order.getTotalAmount()).isEqualTo(6000);
@@ -52,6 +53,7 @@ class OrderTest {
         return Product.builder()
                 .productNumber(productNumber)
                 .type(ProductType.HANDMADE)
+                .sellingStatus(ProductSellingStatus.SELLING)
                 .price(price)
                 .name("메뉴 이름")
                 .build();
