@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
 import sample.cafekiosk.spring.domain.product.Product;
@@ -21,6 +22,7 @@ import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
 import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 
 // 여기서 dataJpaTest를 진행하면 orderService를 못찾아서 테스트 오류 발생
+@ActiveProfiles("test")
 @SpringBootTest
 class OrderServiceTest {
 
@@ -34,6 +36,8 @@ class OrderServiceTest {
     @Test
     void createOrder() {
         // given
+        LocalDateTime registeredDateTime = LocalDateTime.now();
+
         Product product1 = createProduct(HANDMADE, "001", 1000);
         Product product2 = createProduct(HANDMADE, "002", 3000);
         Product product3 = createProduct(HANDMADE, "003", 4000);
@@ -44,7 +48,7 @@ class OrderServiceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request);
+        OrderResponse orderResponse = orderService.createOrder(request, registeredDateTime);
 
         // then
         // 주문 ID에 대한 검증
@@ -52,7 +56,7 @@ class OrderServiceTest {
         // 실제로 값이 들어가야하는 필드(등록시간, 가격)
         assertThat(orderResponse)
                 .extracting("registeredDateTime", "totalPrice")
-                .containsExactly(LocalDateTime.now(), 4000);
+                .containsExactly(registeredDateTime, 4000);
         // product에 대한 검증
         assertThat(orderResponse.getProducts()).hasSize(2)
                 .extracting("productNumber", "price")
