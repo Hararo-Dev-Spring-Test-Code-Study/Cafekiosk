@@ -1,8 +1,10 @@
 package sample.cafekiosk.unit;
 
+// 직접 사용하는 타입만 import하면 됨 -> Beverage는 import 필요없음
 import sample.cafekiosk.unit.beverage.Americano;
 import sample.cafekiosk.unit.beverage.Latte;
 
+// 클래스에 main 메서드가 하나라도 있으면 IDE가 실행 가능한 클래스(엔트리포인트)로 판단
 public class CafeKioskRunner {
 
     public static void main(String[] args) {
