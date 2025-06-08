@@ -4,9 +4,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sample.cafekiosk.spring.domain.BaseEntity;
+import sample.cafekiosk.spring.domain.orderproduct.OrderProduct;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,5 +30,10 @@ public class Order extends BaseEntity {
     private int totalPrice;
 
     private LocalDateTime registeredDateTime;
+
+    // cascade로 생명주기를 걸 수 있는데 일단은 ALL로 걸어두었습니다.
+    // OrderProduct는 order가 생성, 수정, 삭제될 때 항상 변경이 같이 일어나도록 ALL로
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
 }
