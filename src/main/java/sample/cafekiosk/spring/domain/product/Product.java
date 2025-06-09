@@ -33,21 +33,10 @@ public class Product extends BaseEntity {
 
     private int price;
 
-    // 추가
-//     @CreatedDate
-//     private LocalDateTime createdDateTime;
-
-    // 추가
-//     @LastModifiedDate
-//     private LocalDateTime modifiedDateTime;
-
-    @Builder
-    public Product(String productNumber, ProductType type, ProductSellingStatus sellingStatus,
-                   String name, int price) {
+    public Product(String productNumber, String name, int price, ProductSellingStatus sellingStatus) {
         this.productNumber = productNumber;
-        this.type = type;
-        this.sellingStatus = sellingStatus;
         this.name = name;
         this.price = price;
+        this.sellingStatus = sellingStatus;
     }
 }
