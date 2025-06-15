@@ -3,15 +3,16 @@ package sample.cafekiosk.spring.api.controller.order.request;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
+import java.util.Map;
 
 @Getter
 public class OrderCreateRequest {
 
-    private List<String> productNumbers;
+    // 상품번호(String) 에 대한 주문 갯수(Integer) Map
+    private Map<String, Integer> productQuantities;
 
     @Builder
-    public OrderCreateRequest(List<String> productNumbers) {
-        this.productNumbers = productNumbers;
+    public OrderCreateRequest(Map<String, Integer> productQuantities) {
+        this.productQuantities = productQuantities;
     }
 }
