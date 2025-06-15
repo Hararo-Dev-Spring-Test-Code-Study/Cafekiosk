@@ -23,27 +23,43 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(List<String> productNumbers, LocalDateTime registeredDateTime) {
+        // 사용자가 주문한 상품번호 목록으로 상품 엔티티들을 조회
         List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
 
-        // 재고 체크 및 차감
+        // 재고를 확인하고 차감하는 로직 수행
         for (Product product : products) {
+            // 병음료나 베이커리인 경우 재고를 체크
             if (product.getType() == ProductType.BOTTLE || product.getType() == ProductType.BAKERY) {
+                // 상품 번호로 재고 정보를 조회 (없을 경우 예외 발생)
                 Stock stock = stockRepository.findByProductNumber(product.getProductNumber())
                         .orElseThrow(() -> new IllegalArgumentException("재고 정보가 없습니다."));
 
+                // 같은 상품 번호가 주문 목록에 몇 번 포함되어 있는지 계산
                 long count = productNumbers.stream()
                         .filter(pn -> pn.equals(product.getProductNumber()))
                         .count();
 
+                // 재고보다 많은 수량을 주문한 경우 예외 발생
                 if (stock.getQuantity() < count) {
                     throw new IllegalArgumentException("재고가 부족합니다.");
                 }
 
+                // 재고 차감
                 stock.deduct((int) count);
             }
         }
 
-        Order order = new Order(products, registeredDateTime);
+        // 주문을 생성하고 저장 (중복된 상품도 가격에 반영됨)
+        Order order = new Order(
+                productNumbers.stream()
+                        .map(pn -> products.stream()
+                                .filter(p -> p.getProductNumber().equals(pn))
+                                .findFirst()
+                                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다: " + pn)))
+                        .toList(),
+                registeredDateTime
+        );
+
         return orderRepository.save(order);
     }
 }
