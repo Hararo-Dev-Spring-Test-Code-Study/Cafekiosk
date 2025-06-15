@@ -1,5 +1,6 @@
 package sample.cafekiosk.spring.api.service.order;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import sample.cafekiosk.spring.domain.product.ProductType;
 import sample.cafekiosk.spring.domain.stock.Stock;
 import sample.cafekiosk.spring.domain.stock.StockRepository;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +28,7 @@ import static sample.cafekiosk.spring.domain.product.ProductType.*;
 // 여기서 dataJpaTest를 진행하면 orderService를 못찾아서 테스트 오류 발생
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
+//@Transactional
 class OrderServiceTest {
 
     @Autowired
@@ -46,15 +46,16 @@ class OrderServiceTest {
     @Autowired
     private OrderService orderService;
 
-//    @AfterEach
-//    void tearDown() {
+    @AfterEach
+    void tearDown() {
 
-    /// /        productRepository.deleteAll();
-//        orderProductRepository.deleteAllInBatch();
-//        productRepository.deleteAllInBatch();
-//        orderRepository.deleteAllInBatch();
-//        stockRepository.deleteAllInBatch();
-//    }
+        //productRepository.deleteAll();
+        orderProductRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        orderRepository.deleteAllInBatch();
+        stockRepository.deleteAllInBatch();
+    }
+
     @DisplayName("주문번호 리스트를 받아 주문을 생성한다.")
     @Test
     void createOrder() {
@@ -183,8 +184,9 @@ class OrderServiceTest {
         Product product3 = createProduct(HANDMADE, "003", 4000);
         productRepository.saveAll(List.of(product1, product2, product3));
 
-        Stock stock1 = Stock.create("001", 1);
+        Stock stock1 = Stock.create("001", 2);
         Stock stock2 = Stock.create("002", 1);
+        stock1.deductQuantity(1); // todo
         stockRepository.saveAll(List.of(stock1, stock2));
 
         OrderCreateRequest request = OrderCreateRequest.builder()
