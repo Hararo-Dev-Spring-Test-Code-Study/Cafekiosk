@@ -26,6 +26,7 @@ import javax.persistence.Id;
 // 접근제어자 protected로 제한해 의도된 방식(정적 팩토리 메서드나 builder)를 통해서만 생성되도록 유도
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 // 이 클래스는 JPA가 관리하는 엔티티 클래스이며 DB 테이블로 매핑됨
+// 각 필드(id, product_number, quantity)는 DB 테이블의 컬럼(column)에 매핑됨
 @Entity
 public class Stock extends BaseEntity {
 
@@ -41,7 +42,7 @@ public class Stock extends BaseEntity {
     // 남아있는 재고 수량
     private int quantity;
 
-    // Lombok의 빌더 패턴 적용 해객체 생성 유연성 높임
+    // Lombok의 빌더 패턴 적용해 객체 생성 유연성 높임
     // private으로 생성자 만들어 빌더 패턴이나 팩토리 메서드 사용하도록 유도
     @Builder
     private Stock(String productNumber, int quantity) {
@@ -49,12 +50,15 @@ public class Stock extends BaseEntity {
         this.quantity = quantity;
     }
 
-    // 정적 팩토리 메서드
+    // builder를 감싼 정적 팩토리 메서드
     // 객체 생성 시 new 대신 create() 사용 -> 가독성 및 유연성 증가
     public static Stock create(String productNumber, int quantity) {
+        // Builder 객체 생성 시작
         return Stock.builder()
+                // .필드명(필드값) 필드에 값 설정
                 .productNumber(productNumber)
                 .quantity(quantity)
+                // 최종 객체 생성
                 .build();
     }
 
