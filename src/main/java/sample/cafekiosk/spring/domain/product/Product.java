@@ -33,10 +33,11 @@ public class Product extends BaseEntity {
 
     private int price;
 
-    public Product(String productNumber, String name, int price, ProductSellingStatus sellingStatus) {
+    public Product(String productNumber, String name, int price, ProductType type, ProductSellingStatus sellingStatus) {
         this.productNumber = productNumber;
         this.name = name;
         this.price = price;
+        this.type = type;
         this.sellingStatus = sellingStatus;
     }
 }

@@ -12,6 +12,10 @@ public enum ProductType {
     BOTTLE("병음료"),
     BAKERY("베[이커리");
 
+    public boolean requiresStock() {
+        return this == BOTTLE || this == BAKERY;
+    }
+
     private final String text;
 
 }
