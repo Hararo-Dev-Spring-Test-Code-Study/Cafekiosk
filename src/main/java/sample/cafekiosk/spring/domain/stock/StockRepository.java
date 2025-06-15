@@ -19,6 +19,7 @@ import java.util.List;
 // 직접 구현하지 않아도 사용 가능
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
+    // 커스텀 쿼리 메서드
     // 메서드 이름으로 Spring이 SQL 쿼리 자동 생성
     // SELECT * FROM stock WHERE product_number IN (productNumber) 와 유사한 쿼리가 내부적으로 실행됨
     List<Stock> findAllByProductNumberIn(List<String> productNumbers);
