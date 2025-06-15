@@ -17,6 +17,6 @@ public class OrderController {
 
     @PostMapping("/api/v1/orders/create")
     public OrderResponse createOrders(@RequestBody OrderRequest request) {
-        return orderService.createOrder(request.getProductNumbers(), LocalDateTime.now());
+        return orderService.createOrder(request.getProductNumberWithQuantity(), LocalDateTime.now());
     }
 }
