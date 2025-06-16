@@ -34,5 +34,9 @@ public class Order {
     public int getTotalPrice() {
         return products.stream().mapToInt(Product::getPrice).sum();
     }
+
+    public List<Product> getOrderProducts() {
+        return products;
+    }
 }
 
