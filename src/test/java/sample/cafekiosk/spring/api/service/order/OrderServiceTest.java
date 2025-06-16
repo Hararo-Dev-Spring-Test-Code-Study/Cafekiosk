@@ -76,16 +76,16 @@ class OrderServiceTest {
                 createStock("002", 3)  // 베이커리 재고 3개
         ));
 
-        List<String> orderRequest = List.of("001", "002"); // 병음료 1개, 베이커리 1개 주문
+        List<String> orderRequest = List.of("001", "002", "002"); // 병음료 1개, 베이커리 2개 주문
 
         // when
         Order order = orderService.createOrder(orderRequest);
 
         // then
         assertThat(order.getTotalPrice()).isEqualTo(
-                bottle.getPrice() + bakery.getPrice()
+                bottle.getPrice() + bakery.getPrice() * 2
         );
-        assertThat(order.getOrderProducts()).hasSize(2); // 총 2개 주문
+        assertThat(order.getOrderProducts()).hasSize(3); // 총 3개 주문
     }
 
     @DisplayName("고객이 선택한 상품 수량이 재고보다 많으면, 주문 생성 시 예외가 발생한다")
