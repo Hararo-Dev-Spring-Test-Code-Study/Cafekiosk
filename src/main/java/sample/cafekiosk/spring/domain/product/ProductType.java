@@ -1,10 +1,13 @@
 package sample.cafekiosk.spring.domain.product;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.STRING)
+
 public enum ProductType {
 
     // ENUM 필드를 둘때, text로 설명 필드를 생성했습니다.

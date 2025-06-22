@@ -1,5 +1,6 @@
 package sample.cafekiosk.spring.domain.product;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -7,6 +8,8 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.STRING)
+
 public enum ProductSellingStatus {
 
     SELLING("판매중"),
