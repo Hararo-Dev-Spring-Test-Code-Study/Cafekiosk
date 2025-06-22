@@ -40,4 +40,8 @@ public class Product extends BaseEntity {
         this.type = type;
         this.sellingStatus = sellingStatus;
     }
+
+    public static Product create(String productNumber, String name, int price, ProductType type, ProductSellingStatus sellingStatus) {
+        return new Product(productNumber, name, price, type, sellingStatus);
+    }
 }
