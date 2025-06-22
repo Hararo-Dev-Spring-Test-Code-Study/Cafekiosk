@@ -1,3 +1,5 @@
+// Response DTO : 클라이언트에게 응답 데이터를 보낼 때 사용하는 객체
+
 package sample.cafekiosk.spring.api.service.product.response;
 
 import lombok.Builder;
@@ -9,8 +11,8 @@ import sample.cafekiosk.spring.domain.product.ProductType;
 @Getter
 public class ProductResponse {
 
-    private Long id;
-    private String productNumber;
+    private Long id; // DB PK
+    private String productNumber; // 고유번호
     private ProductType type;
     private ProductSellingStatus sellingStatus;
     private String name;
@@ -26,6 +28,7 @@ public class ProductResponse {
         this.price = price;
     }
 
+    // 엔티티 Product를 이 DTO로 변환하는 메서드
     public static ProductResponse of(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
