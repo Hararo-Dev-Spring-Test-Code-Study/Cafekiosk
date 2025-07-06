@@ -1,40 +1,48 @@
 package sample.cafekiosk.spring.domain.product;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sample.cafekiosk.spring.domain.BaseEntity;
 
-import javax.persistence.*;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Product extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private String productNumber;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private ProductType type;
+  @Column(unique = true)
+  private String productNumber;
 
-    @Enumerated(EnumType.STRING)
-    private ProductSellingStatus sellingStatus;
+  @Enumerated(EnumType.STRING)
+  private ProductType type;
 
-    private String name;
+  @Enumerated(EnumType.STRING)
+  private ProductSellingStatus sellingStatus;
 
-    private int price;
+  private String name;
 
-    // id의 경우 데이터베이스에서 만들어주는 것으로 전략을 했기 때문에 id를 제외한 빌더 생성
-    @Builder
-    public Product(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, int price) {
-        this.productNumber = productNumber;
-        this.type = type;
-        this.sellingStatus = sellingStatus;
-        this.name = name;
-        this.price = price;
-    }
+  private int price;
+
+  // id의 경우 데이터베이스에서 만들어주는 것으로 전략을 했기 때문에 id를 제외한 빌더 생성
+  @Builder
+  public Product(String productNumber, ProductType type, ProductSellingStatus sellingStatus,
+      String name, int price) {
+    this.productNumber = productNumber;
+    this.type = type;
+    this.sellingStatus = sellingStatus;
+    this.name = name;
+    this.price = price;
+  }
 }
