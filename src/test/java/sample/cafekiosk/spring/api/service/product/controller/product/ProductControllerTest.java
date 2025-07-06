@@ -43,10 +43,10 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productNumber").value("004"))
-                .andExpect(jsonPath("$.name").value("수박주스"))
-                .andExpect(jsonPath("$.type").value("HANDMADE"))
-                .andExpect(jsonPath("$.sellingStatus").value("SELLING"))
-                .andExpect(jsonPath("$.price").value(4500));
+                .andExpect(jsonPath("$.data.productNumber").value("004"))
+                .andExpect(jsonPath("$.data.name").value("수박주스"))
+                .andExpect(jsonPath("$.data.type").value("HANDMADE"))
+                .andExpect(jsonPath("$.data.sellingStatus").value("SELLING"))
+                .andExpect(jsonPath("$.data.price").value(4500));
     }
 }

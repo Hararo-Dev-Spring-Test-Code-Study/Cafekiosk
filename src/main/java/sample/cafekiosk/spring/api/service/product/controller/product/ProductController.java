@@ -3,6 +3,7 @@ package sample.cafekiosk.spring.api.service.product.controller.product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sample.cafekiosk.spring.api.common.APIResponse;
 import sample.cafekiosk.spring.api.service.product.ProductService;
 import sample.cafekiosk.spring.api.service.product.controller.request.ProductCreateRequest;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
@@ -27,9 +28,10 @@ public class ProductController {
         );
     }
 
-    //상품추가
+    //상품추가-APIResponse 포맷적용
     @PostMapping
-    public ProductResponse createProduct(@RequestBody ProductCreateRequest request) {
-        return productService.createProduct(request);
+    public APIResponse<ProductResponse> createProduct(@RequestBody ProductCreateRequest request) {
+        ProductResponse response = productService.createProduct(request);
+        return APIResponse.success(response);
     }
 }
