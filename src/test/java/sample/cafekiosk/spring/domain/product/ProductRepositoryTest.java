@@ -3,9 +3,10 @@ package sample.cafekiosk.spring.domain.product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,9 +14,10 @@ import static org.assertj.core.groups.Tuple.tuple;
 import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
 import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 
-// @SpringBootTest
+@SpringBootTest
+@Transactional
 @ActiveProfiles("test")
-@DataJpaTest
+// @DataJpaTest
 class ProductRepositoryTest {
 
     @Autowired
@@ -25,35 +27,12 @@ class ProductRepositoryTest {
     @Test
     void findAllBySellingStatusIn() {
         // given
-        // Product를 생성해서 given 데이터를 만들건데 현재 Product 클래스에는 생성자가 없음
-        Product product1 = Product.builder()
-                .productNumber("001")
-                .type(HANDMADE)
-                .sellingStatus(SELLING)
-                .name("아메리카노")
-                .price(4000)
-                .build();
-
-        Product product2 = Product.builder()
-                .productNumber("002")
-                .type(HANDMADE)
-                .sellingStatus(HOLD)
-                .name("카페라떼")
-                .price(4500)
-                .build();
-
-        Product product3 = Product.builder()
-                .productNumber("003")
-                .type(HANDMADE)
-                .sellingStatus(STOP_SELLING)
-                .name("팥빙수")
-                .price(9000)
-                .build();
-
+        Product product1 = createProduct("001", HANDMADE, SELLING, "아메리카노", 4000);
+        Product product2 = createProduct("002", HANDMADE, HOLD, "카페라떼", 4500);
+        Product product3 = createProduct("003", HANDMADE, STOP_SELLING, "팥빙수", 9000);
         productRepository.saveAll(List.of(product1, product2, product3));
 
         // when
-        // 여기서 1번이랑 2번만 조회가 되는지
         List<Product> products = productRepository.findAllBySellingStatusIn(List.of(SELLING, HOLD));
 
         // then
@@ -69,34 +48,13 @@ class ProductRepositoryTest {
     @DisplayName("상품번호 리스트로 상품을 조회한다.")
     @Test
     void findAllByProductNumberIn() {
-        Product product1 = Product.builder()
-                .productNumber("001")
-                .type(HANDMADE)
-                .sellingStatus(SELLING)
-                .name("아메리카노")
-                .price(4000)
-                .build();
-
-        Product product2 = Product.builder()
-                .productNumber("002")
-                .type(HANDMADE)
-                .sellingStatus(HOLD)
-                .name("카페라떼")
-                .price(4500)
-                .build();
-
-        Product product3 = Product.builder()
-                .productNumber("003")
-                .type(HANDMADE)
-                .sellingStatus(STOP_SELLING)
-                .name("팥빙수")
-                .price(9000)
-                .build();
+        Product product1 = createProduct("001", HANDMADE, SELLING, "아메리카노", 4000);
+        Product product2 = createProduct("002", HANDMADE, HOLD, "카페라떼", 4500);
+        Product product3 = createProduct("003", HANDMADE, STOP_SELLING, "팥빙수", 9000);
 
         productRepository.saveAll(List.of(product1, product2, product3));
 
         // when
-        // 여기서 1번이랑 2번만 조회가 되는지
         List<Product> products = productRepository.findAllByProductNumberIn(List.of("001", "002"));
 
         // then
@@ -107,5 +65,43 @@ class ProductRepositoryTest {
                         tuple("001", "아메리카노", SELLING),
                         tuple("002", "카페라떼", HOLD)
                 );
+    }
+
+    @DisplayName("가장 마지막으로 저장한 상품의 상품번호를 불러온다.")
+    @Test
+    void findLatestProductNumber() {
+        String targetProductNumber = "003";
+
+        Product product1 = createProduct("001", HANDMADE, SELLING, "아메리카노", 4000);
+        Product product2 = createProduct("002", HANDMADE, HOLD, "카페라떼", 4500);
+        Product product3 = createProduct(targetProductNumber, HANDMADE, STOP_SELLING, "팥빙수", 9000);
+        productRepository.saveAll(List.of(product1, product2, product3));
+
+        // when
+        String latestProductNumber = productRepository.findLatestProductNumber();
+
+        // then
+        assertThat(latestProductNumber).isEqualTo(targetProductNumber);
+    }
+
+    @DisplayName("가장 마지막으로 저장한 상품의 상품번호를 불러올 때, 저장된 상품이 존재하지 않을 경우 NULL을 반환한다.")
+    @Test
+    void findLatestProductNumberWhenProductIsEmpty() {
+        // when
+        String latestProductNumber = productRepository.findLatestProductNumber();
+
+        // then
+        assertThat(latestProductNumber).isNull();
+    }
+
+    // 테스트에서 중복적으로 사용하는 상품을 생성하는 코드를 메서드로 추출하여 코드의 가독성을 높임
+    private Product createProduct(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String productName, int price) {
+        return Product.builder()
+                .productNumber(productNumber)
+                .type(type)
+                .sellingStatus(sellingStatus)
+                .name(productName)
+                .price(price)
+                .build();
     }
 }
