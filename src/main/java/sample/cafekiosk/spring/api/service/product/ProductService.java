@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -28,7 +29,7 @@ public class ProductService {
 
     }
 
-    //신규상품등록
+    //신규상품등록=조회+쓰기가 조합되어있음. 따라서 Readonly true 사용불가함
     @Transactional
     public ProductResponse createProduct(ProductCreateRequest request) {
         // 다음 상품번호 생성 (예: 001, 002, ...)

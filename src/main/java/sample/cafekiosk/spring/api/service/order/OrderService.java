@@ -15,13 +15,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true) // 기본적으로 읽기 전용 트랜잭션 적용
 public class OrderService {
 
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final StockRepository stockRepository;
 
-    @Transactional
+    @Transactional // 쓰기 작업이므로 readOnly 해제 (기본값 false)
     public Order createOrder(List<String> productNumbers, LocalDateTime registeredDateTime) {
         // 사용자가 주문한 상품번호 목록으로 상품 엔티티들을 조회
         List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
