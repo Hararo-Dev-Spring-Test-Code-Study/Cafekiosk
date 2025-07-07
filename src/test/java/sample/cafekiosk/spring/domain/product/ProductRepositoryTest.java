@@ -1,6 +1,5 @@
 package sample.cafekiosk.spring.domain.product;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,31 +9,24 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.tuple;
-import static sample.cafekiosk.spring.domain.product.ProductType.*;
+import static org.assertj.core.groups.Tuple.tuple;
 import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
+import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 
 // @SpringBootTest
-
-// 테스트 전용 프로필 적용 (data.sql 미실행)
-@ActiveProfiles("test") // -> application-test.yml 기준으로 실행함
+@ActiveProfiles("test")
 @DataJpaTest
 class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
 
-//    @BeforeEach
-//    void setUp() {
-//        productRepository.deleteAll();
-//    }
-
-    @DisplayName("판매 가능한 상태(SELLING, HOLD)의 상품을 조회한다.")
+    @DisplayName("원하는 판매 상태를 가진 상품들을 조회한다.")
     @Test
     void findAllBySellingStatusIn() {
         // given
-        // 상품 생성
-        Product p1 = Product.builder()
+        // Product를 생성해서 given 데이터를 만들건데 현재 Product 클래스에는 생성자가 없음
+        Product product1 = Product.builder()
                 .productNumber("001")
                 .type(HANDMADE)
                 .sellingStatus(SELLING)
@@ -42,7 +34,7 @@ class ProductRepositoryTest {
                 .price(4000)
                 .build();
 
-        Product p2 = Product.builder()
+        Product product2 = Product.builder()
                 .productNumber("002")
                 .type(HANDMADE)
                 .sellingStatus(HOLD)
@@ -50,25 +42,70 @@ class ProductRepositoryTest {
                 .price(4500)
                 .build();
 
-        Product p3 = Product.builder()
+        Product product3 = Product.builder()
                 .productNumber("003")
-                .type(BAKERY)
+                .type(HANDMADE)
                 .sellingStatus(STOP_SELLING)
-                .name("크루아상")
-                .price(3500)
+                .name("팥빙수")
+                .price(9000)
                 .build();
 
-        productRepository.saveAll(List.of(p1, p2, p3));
+        productRepository.saveAll(List.of(product1, product2, product3));
 
         // when
+        // 여기서 1번이랑 2번만 조회가 되는지
         List<Product> products = productRepository.findAllBySellingStatusIn(List.of(SELLING, HOLD));
 
         // then
-        assertThat(products).hasSize(2)
-                .extracting("productNumber", "type", "sellingStatus", "name", "price")
+        assertThat(products)
+                .hasSize(2)
+                .extracting("productNumber", "name", "sellingStatus")
                 .containsExactlyInAnyOrder(
-                        tuple("001", HANDMADE, SELLING, "아메리카노", 4000),
-                        tuple("002", HANDMADE, HOLD, "카페라떼", 4500)
+                        tuple("001", "아메리카노", SELLING),
+                        tuple("002", "카페라떼", HOLD)
+                );
+    }
+
+    @DisplayName("상품번호 리스트로 상품을 조회한다.")
+    @Test
+    void findAllByProductNumberIn() {
+        Product product1 = Product.builder()
+                .productNumber("001")
+                .type(HANDMADE)
+                .sellingStatus(SELLING)
+                .name("아메리카노")
+                .price(4000)
+                .build();
+
+        Product product2 = Product.builder()
+                .productNumber("002")
+                .type(HANDMADE)
+                .sellingStatus(HOLD)
+                .name("카페라떼")
+                .price(4500)
+                .build();
+
+        Product product3 = Product.builder()
+                .productNumber("003")
+                .type(HANDMADE)
+                .sellingStatus(STOP_SELLING)
+                .name("팥빙수")
+                .price(9000)
+                .build();
+
+        productRepository.saveAll(List.of(product1, product2, product3));
+
+        // when
+        // 여기서 1번이랑 2번만 조회가 되는지
+        List<Product> products = productRepository.findAllByProductNumberIn(List.of("001", "002"));
+
+        // then
+        assertThat(products)
+                .hasSize(2)
+                .extracting("productNumber", "name", "sellingStatus")
+                .containsExactlyInAnyOrder(
+                        tuple("001", "아메리카노", SELLING),
+                        tuple("002", "카페라떼", HOLD)
                 );
     }
 }

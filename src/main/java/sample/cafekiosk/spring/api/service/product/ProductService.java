@@ -2,7 +2,9 @@ package sample.cafekiosk.spring.api.service.product;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import sample.cafekiosk.spring.api.controller.product.ProductCreateRequest;
+import org.springframework.transaction.annotation.Transactional;
+import sample.cafekiosk.spring.api.ApiResponse;
+import sample.cafekiosk.spring.api.controller.product.request.ProductCreateRequest;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
@@ -18,21 +20,19 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     // 프론트 화면에서 조회를 했을 때, 판매가 가능한 상태의 제품을 보여준다
+    @Transactional(readOnly = true)
     public List<ProductResponse> getSellingProducts() {
         List<Product> products = productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplay());
 
         return products.stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toList());
-
     }
 
-    public ProductResponse createProduct(ProductCreateRequest request) {
-        String latestProductNumber = productRepository.findLatestProductNumber();
-        if (latestProductNumber == null) {
-            latestProductNumber = "000";
-        }
-        String newProductNumber = generateNextProductNumber(latestProductNumber);
+    // 신규 상품 등록
+    @Transactional
+    public ApiResponse<ProductResponse> createProduct(ProductCreateRequest request) {
+        String newProductNumber = generateNextProductNumber();
 
         Product product = Product.builder()
                 .productNumber(newProductNumber)
@@ -43,12 +43,19 @@ public class ProductService {
                 .build();
         productRepository.save(product);
 
-        // 응답 객체 생성
-        return ProductResponse.of(product);
+        ProductResponse response = ProductResponse.of(product);
+
+        return ApiResponse.onSuccess("200", "새로운 상품이 등록되었습니다.", response);
     }
 
-    private String generateNextProductNumber(String latest) {
-        int num = Integer.parseInt(latest); // "007" → 7
-        return String.format("%03d", num + 1); // 7 + 1 → "008"
+    // 상품 번호 생성하기
+    private String generateNextProductNumber() {
+        String latestProductNumber = productRepository.findLatestProductNumber();
+        if (latestProductNumber == null) {
+            latestProductNumber = "000";
+        }
+
+        int nextProductNumber = Integer.parseInt(latestProductNumber) + 1; // "007" → 7
+        return String.format("%03d", nextProductNumber); // 7 + 1 → "008"
     }
 }

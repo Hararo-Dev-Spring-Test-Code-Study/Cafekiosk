@@ -1,46 +1,53 @@
 package sample.cafekiosk.spring.domain.stock;
 
-
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@ActiveProfiles("test")
-public class StockTest {
+class StockTest {
 
-    @DisplayName("주문 수량만큼 재고를 차감한다")
+    @DisplayName("재고의 수량이 제공된 수량보다 적은지 확인한다.")
     @Test
-    void deductStock() {
+    void isQuantityLessThan() {
         // given
-        Stock stock = Stock.builder()
-                .productNumber("001")
-                .quantity(10)
-                .build();
+        Stock stock = Stock.create("001", 4);
+        int quantity = 5;
 
         // when
-        stock.deductQuantity(3);
+        boolean result = stock.isQuantityLessThan(quantity);
 
         // then
-        assertThat(stock.getQuantity()).isEqualTo(7);
+        assertThat(result).isTrue();
     }
 
-    @DisplayName("재고보다 더 많은 수량을 주문하면 예외가 발생한다")
+    @DisplayName("재고를 주어진 개수만큼 차감할 수 있다.")
     @Test
-    void deductStock_withException() {
+    void deductQuantity () {
         // given
-        Stock stock = Stock.builder()
-                .productNumber("001")
-                .quantity(5)
-                .build();
+        Stock stock = Stock.create("001", 4);
+        int quantity = 3;
+
+        // when
+        stock.deductQuantity(quantity);
 
         // then
-        assertThatThrownBy(() -> stock.deductQuantity(10))
+        assertThat(stock.getQuantity()).isEqualTo(1);
+    }
+
+    @DisplayName("재고보다 많은 수량으로 재고 차감을 시도하는 경우 예외가 발생한다.")
+    @Test
+    void deductQuantity2() {
+        // given
+        Stock stock = Stock.create("001", 4);
+        int quantity = 5;
+
+        // when // Then
+        assertThatThrownBy(() -> stock.deductQuantity(quantity))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("재고가 부족합니다.");
+                .hasMessage("차감할 재고 수량이 없습니다.");
     }
 }
