@@ -25,8 +25,7 @@ public class Stock {
     private int quantity;
 
     @Builder
-    public Stock(Long id, String productNumber, int quantity) {
-        this.id = id;
+    public Stock(String productNumber, int quantity) {
         this.productNumber = productNumber;
         this.quantity = quantity;
     }
