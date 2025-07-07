@@ -7,10 +7,6 @@ import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-
 @Getter
 @NoArgsConstructor // Post 요청이 올때 objectMapper가 역직렬화를 도와주는데, 이때 기본 생성자를 쓰기 때문에
 public class ProductCreateServiceRequest {
