@@ -1,35 +1,33 @@
 package sample.cafekiosk.spring.api;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
-@AllArgsConstructor
-@JsonPropertyOrder({"code", "status", "message", "data"}) // 직렬화 하는 속성 순서 정함
-public class ApiResponse <T> {
+public class ApiResponse<T> {
 
-    private static final String DEFAULT_SUCCESS_CODE = "S001";
-    private static final String DEFAULT_SUCCESS_MESSAGE = "요청 성공";
-
-    private final String code;
-    private final Boolean status;
-    private final String message;
+    private int code;
+    private HttpStatus status;
+    private String message;
     private T data;
 
-    public static <T> ApiResponse<T> onSuccess(T data) {
-        return new ApiResponse<>(DEFAULT_SUCCESS_CODE, true, DEFAULT_SUCCESS_MESSAGE, data);
+    public ApiResponse(HttpStatus status, String message, T data) {
+        this.code = status.value();
+        this.status = status;
+        this.message = message;
+        this.data = data;
     }
 
-    public static <T> ApiResponse<T> onSuccess(String code, String message, T data) {
-        return new ApiResponse<>(code, true, message, data);
+    public static <T> ApiResponse<T> of(HttpStatus httpStatus, String message, T data) {
+        return new ApiResponse<>(httpStatus, message, data);
     }
 
-    public static <T> ApiResponse<T> onFailure(String code, String message) {
-        return new ApiResponse<>(code, false, message, null);
+    public static <T> ApiResponse<T> of(HttpStatus httpStatus, T data) {
+        return of(httpStatus, httpStatus.name(), data);
     }
 
-    public static <T> ApiResponse<T> onFailure(String code, String message, T data) {
-        return new ApiResponse<>(code, false, message, data);
+    // 자주 쓰이는 status에 대한 팩토리 메소드를 만드는 것도 좋을것 같네요
+    public static <T> ApiResponse<T> ok(T data) {
+        return of(HttpStatus.OK, HttpStatus.OK.name(), data);
     }
 }

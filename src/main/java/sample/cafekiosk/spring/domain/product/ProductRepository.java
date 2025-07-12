@@ -19,7 +19,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByProductNumberIn(List<String> productNumbers);
 
-    // 마지막 상품 번호 찾기
-    @Query(value="select product.product_number from product order by id desc limit 1", nativeQuery = true) // nativeQuery = true를 통해 SQL 문법 그대로 사용
+    // native 쿼리로 데이터를 날림
+    // id기준으로 역순 정렬했을 때, 가장 상위에 있는 상품번호를 하나 뽑아와라
+    @Query(value = "select p.product_number from product p order by id desc limit 1", nativeQuery = true)
     String findLatestProductNumber();
+
 }
