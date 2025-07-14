@@ -53,6 +53,10 @@ public class Order extends BaseEntity {
         return new Order(products, registeredDateTime);
     }
 
+    public void updateOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
     private int calculateTotalPrice(List<Product> products) {
         return products.stream().mapToInt(Product::getPrice).sum();
     }
