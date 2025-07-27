@@ -52,4 +52,8 @@ public class Order extends BaseEntity {
     private int calculateTotalPrice(List<Product> products) {
         return products.stream().mapToInt(Product::getPrice).sum();
     }
+
+    public void updateOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }
