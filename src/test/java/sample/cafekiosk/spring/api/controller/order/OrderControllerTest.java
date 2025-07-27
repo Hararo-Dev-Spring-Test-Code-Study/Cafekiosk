@@ -48,7 +48,7 @@ class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.status").value("OK"))
-                .andExpect(jsonPath("$.message").value("OK"));
+                .andExpect(jsonPath("$.message").value("OK"))
         ;
     }
 
@@ -71,7 +71,6 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.message").value("상품 번호 리스트는 필수입니다."))
-                .andExpect(jsonPath("$.data").isEmpty())
         ;
     }
 

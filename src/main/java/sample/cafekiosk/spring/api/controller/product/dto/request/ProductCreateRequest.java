@@ -22,12 +22,12 @@ public class ProductCreateRequest {
     @NotNull(message = "상품 판매상태는 필수입니다.")
     private ProductSellingStatus sellingStatus;
 
-    @NotBlank(message = "상품 이름은 필수입니다.") // Null empty 둘다 통과 안함
     // 스트링 검증
     // @NotNull Null이 아니어야함 ,빈문자열 공백이 있는 문자열은 통과
     // @NotEmpty 공백은 통과, 빈문자열만 걸림
     // 상품 이름에 대한 길이 제한이 잇다고 가정했을 때 여기서 @Max(20)과 같이 검증할 수 있다
     // 하지만 여기서 이러한 부분을 검증하는 것이 맞는지 고민해볼 필요가 있다. -> Controller에서 가져야할 책임인가?
+    @NotBlank(message = "상품 이름은 필수입니다.") // Null empty 둘다 통과 안함
     private String name;
 
     @Positive(message = "상품 가격은 0 이상입니다.")
