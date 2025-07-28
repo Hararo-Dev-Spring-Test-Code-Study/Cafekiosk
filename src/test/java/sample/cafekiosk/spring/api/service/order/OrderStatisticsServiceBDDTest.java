@@ -1,0 +1,112 @@
+package sample.cafekiosk.spring.api.service.order;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sample.cafekiosk.spring.api.service.mail.MailService;
+import sample.cafekiosk.spring.domain.order.Order;
+import sample.cafekiosk.spring.domain.order.OrderRepository;
+import sample.cafekiosk.spring.domain.order.OrderStatus;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class OrderStatisticsServiceBDDTest {
+
+    @Mock
+    private OrderRepository orderRepository;
+
+    @Mock
+    private MailService mailService;
+
+    @InjectMocks
+    private OrderStatisticsService orderStatisticsService;
+
+    @DisplayName("결제완료 주문들을 조회하여 매출 통계 메일을 전송한다 - BDDMockito")
+    @Test
+    void sendOrderStatisticsMail() {
+        // given
+        LocalDate orderDate = LocalDate.of(2023, 3, 5);
+        String email = "test@test.com";
+
+        Order order1 = createMockOrder(3000);
+        Order order2 = createMockOrder(5000);
+        Order order3 = createMockOrder(2000);
+        List<Order> orders = List.of(order1, order2, order3);
+
+        given(orderRepository.findOrdersBy(
+                any(LocalDateTime.class),
+                any(LocalDateTime.class),
+                any(OrderStatus.class)
+        )).willReturn(orders);
+
+        given(mailService.sendMail(anyString(), anyString(), anyString(), anyString()))
+                .willReturn(true);
+
+        // when
+        boolean result = orderStatisticsService.sendOrderStatisticsMail(orderDate, email);
+
+        // then
+        assertThat(result).isTrue();
+
+        then(orderRepository).should().findOrdersBy(
+                orderDate.atStartOfDay(),
+                orderDate.plusDays(1).atStartOfDay(),
+                OrderStatus.PAYMENT_COMPLETED
+        );
+
+        then(mailService).should().sendMail(
+                "no-reply@cafekiosk.com",
+                email,
+                "[매출통계] 2023-03-05",
+                "총 매출 합계는 10000원입니다."
+        );
+    }
+
+    @DisplayName("결제완료 주문이 없는 경우 0원으로 매출 통계 메일을 전송한다 - BDDMockito")
+    @Test
+    void sendOrderStatisticsMailNoOrders() {
+        // given
+        LocalDate orderDate = LocalDate.of(2023, 3, 5);
+        String email = "test@test.com";
+
+        given(orderRepository.findOrdersBy(
+                any(LocalDateTime.class),
+                any(LocalDateTime.class),
+                any(OrderStatus.class)
+        )).willReturn(List.of());
+
+        given(mailService.sendMail(anyString(), anyString(), anyString(), anyString()))
+                .willReturn(true);
+
+        // when
+        boolean result = orderStatisticsService.sendOrderStatisticsMail(orderDate, email);
+
+        // then
+        assertThat(result).isTrue();
+
+        then(mailService).should().sendMail(
+                "no-reply@cafekiosk.com",
+                email,
+                "[매출통계] 2023-03-05",
+                "총 매출 합계는 0원입니다."
+        );
+    }
+
+    private Order createMockOrder(int totalPrice) {
+        Order order = mock(Order.class);
+        when(order.getTotalPrice()).thenReturn(totalPrice);
+        return order;
+    }
+
+}
