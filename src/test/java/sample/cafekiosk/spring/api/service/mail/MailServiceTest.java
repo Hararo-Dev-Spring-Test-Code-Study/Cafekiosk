@@ -15,6 +15,7 @@ import sample.cafekiosk.spring.domain.order.OrderStatus;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.*;
 
 // Mockito를 사용하기 위한 어노테이션
@@ -45,25 +46,67 @@ public class MailServiceTest {
                 createOrder(6000)
         );
 
-//        Stub 설정:
-//        orderRepository.findOrdersByStatusAndDate()가 호출되면 위에서 만든 orders 리스트를 반환하도록 지정
-//         → 실제 DB를 쓰지 않기 때문에 가짜 응답을 만들어줌
-        when(orderRepository.findOrdersByStatusAndRegisteredDateTimeBetween(OrderStatus.PAYMENT_COMPLETED, date.atStartOfDay(),
-                date.plusDays(1).atStartOfDay()))
-                .thenReturn(orders);
+//        orderRepository의 특정 메서드가 호출되었을 때, 실제 DB에서 데이터를 읽는 것이 아니라 미리 준비된 orders 리스트를 리턴하도록 설정
+//	      “이런 조건(OrderStatus + 날짜)이면 이런 결과(orders)가 나올 것이다”를 행동 기반으로 명시
+        given(orderRepository.findOrdersByStatusAndRegisteredDateTimeBetween(
+                OrderStatus.PAYMENT_COMPLETED,
+                date.atStartOfDay(),
+                date.plusDays(1).atStartOfDay()
+        )).willReturn(orders);
+
+// mailRepository.save()는 Mail을 반환하므로 null 또는 dummy 객체를 반환하도록 설정
+        given(mailRepository.save(any(Mail.class)))
+                .willReturn(null);  // 또는 new Mail(...) 처럼 실제 객체로 바꿔도 됨
 
         // when
+//         테스트 대상 메서드를 호출
         mailService.sendDailyReport(date);
 
         // then
-//        orderRepository가 한 번 정확하게 해당 메서드로 호출되었는지를 검증
-        verify(orderRepository, times(1)).findOrdersByStatusAndRegisteredDateTimeBetween(OrderStatus.PAYMENT_COMPLETED,
-                date.atStartOfDay(),
-                date.plusDays(1).atStartOfDay());
+//        OrderRepository의 해당 메서드가 정확히 한 번 호출되었는지를 검증
+        then(orderRepository).should(times(1))
+                .findOrdersByStatusAndRegisteredDateTimeBetween(
+                        OrderStatus.PAYMENT_COMPLETED,
+                        date.atStartOfDay(),
+                        date.plusDays(1).atStartOfDay()
+                );
 
-//        mailRepository.save()가 한 번 호출되었는지 검증
-        verify(mailRepository, times(1)).save(any(Mail.class));
+//        mailRepository.save()가 정확히 한 번 호출되었는지를 검증
+        then(mailRepository).should(times(1)).save(any(Mail.class));
     }
+
+//    @DisplayName("해당 일자에 결제완료 주문 총 매출을 계산하여 메일을 전송한다")
+//    @Test
+//    void sendDailyReport() {
+//        // given
+//        // 테스트 데이터(날짜, 주문내역)
+//        LocalDate date = LocalDate.of(2025, 7, 13);
+//
+//        List<Order> orders = List.of(
+//                createOrder(4000),
+//                createOrder(6000)
+//        );
+//
+////        Stub 설정:
+////        orderRepository.findOrdersByStatusAndDate()가 호출되면 위에서 만든 orders 리스트를 반환하도록 지정
+////         → 실제 DB를 쓰지 않기 때문에 가짜 응답을 만들어줌
+//        when(orderRepository.findOrdersByStatusAndRegisteredDateTimeBetween(OrderStatus.PAYMENT_COMPLETED, date.atStartOfDay(),
+//                date.plusDays(1).atStartOfDay()))
+//                .thenReturn(orders);
+//
+//        // when
+//        mailService.sendDailyReport(date);
+//
+//        // then
+////        orderRepository가 한 번 정확하게 해당 메서드로 호출되었는지를 검증
+//        verify(orderRepository, times(1)).findOrdersByStatusAndRegisteredDateTimeBetween(OrderStatus.PAYMENT_COMPLETED,
+//                date.atStartOfDay(),
+//                date.plusDays(1).atStartOfDay());
+//
+
+    /// /        mailRepository.save()가 한 번 호출되었는지 검증
+//        verify(mailRepository, times(1)).save(any(Mail.class));
+//    }
 
     //    진짜 Order 객체를 만들지 않고 Mockito의 mock(Order.class)로 가짜 객체를 생성
     private Order createOrder(int price) {
