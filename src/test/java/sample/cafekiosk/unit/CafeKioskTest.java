@@ -1,5 +1,6 @@
 package sample.cafekiosk.unit;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import sample.cafekiosk.unit.beverage.Americano;
@@ -110,7 +111,7 @@ class CafeKioskTest {
     // 아래 테스트가 항상 통과 할까?
     // LocalDateTime을 내부에서 사용하면 코드를 작성하는 시간에 따라 테스트 성공 여부가 달라진다.
 
-    @DisplayName("영업 시작 시간 이전에는 주문을 생성할 수 없다.")
+    @DisplayName("영업시간 내에는 주문을 생성할 수 있다.")
     @Test
     void createOrder() {
         // given
@@ -124,7 +125,19 @@ class CafeKioskTest {
         // then
         assertThat(order.getBeverages()).hasSize(1);
         assertThat(order.getBeverages().get(0).getName()).isEqualTo("아메리카노");
+    }
 
+    @DisplayName("영업시간 이전 또는 이후에는 주문을 생성할 수 없다.")
+    @Test
+    void createOrderOutOfTime() {
+        // given
+        CafeKiosk cafekiosk = new CafeKiosk();
+        Latte latte = new Latte();
+        cafekiosk.add(latte);
+
+        // when
+
+        // then
         // 예외 상황을 검증하기 위해 사용하는 assertThatThrownBy
         // 예외 상황을 검증하기 위해서는 항상 엣지 케이스 위주로 테스트해보는 것이 좋다
         // 여기에서는 영업시간 직전, 영업시간 종료 직후

@@ -61,12 +61,8 @@ public class CafeKiosk {
     }
 
     // createOrder : 주문 생성
-    public Order createOrder(LocalDateTime localDateTime) {
-        // 여기에 LocalDateTime은 테스트하기 어려운 부분이다.
-        // 그래서 LocalDateTime을 외부로 빼내서 주문 생성 메서드를 작성함 -> 테스트하기 쉬워짐
-        LocalDateTime currentDateTime = LocalDateTime.now();
+    public Order createOrder(LocalDateTime currentDateTime) {
         LocalTime currentTime = currentDateTime.toLocalTime();
-
         if (currentTime.isBefore(SHOP_OPEN_TIME) || currentTime.isAfter(SHOP_CLOSE_TIME)) {
             throw new IllegalArgumentException("주문 시간이 아닙니다. 관리자에게 문의하세요.");
         }
