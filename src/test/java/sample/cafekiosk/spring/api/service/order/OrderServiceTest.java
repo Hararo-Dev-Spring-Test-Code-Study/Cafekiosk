@@ -1,6 +1,7 @@
 package sample.cafekiosk.spring.api.service.order;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import sample.cafekiosk.spring.domain.stock.StockRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import sample.cafekiosk.test.fixture.ProductFixtures;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -46,6 +48,15 @@ class OrderServiceTest {
 
     @Autowired
     private OrderService orderService;
+
+
+    private static LocalDateTime fixedWhen;
+
+    @BeforeAll
+    static void setUp() {
+        fixedWhen = LocalDateTime.of(2025, 8, 24, 10, 28);
+    }
+
 
     @AfterEach
     void tearDown() {
@@ -200,6 +211,29 @@ class OrderServiceTest {
                 .hasMessage("재고가 부족한 상품이 있습니다.");
 
     }
+
+    @DisplayName("주문 총액만 검증한다 - Fixture 버전(번호/가격만 제어)")
+    @Test
+    void createOrder_totalPriceOnly_withFixture() {
+        // given
+        productRepository.saveAll(List.of(
+            ProductFixtures.priced("001", 1000),
+            ProductFixtures.priced("002", 3000),
+            ProductFixtures.priced("003", 4000)
+        ));
+        OrderCreateRequest request = OrderCreateRequest.builder()
+            .productNumbers(List.of("001", "002"))
+            .build();
+
+
+        // when
+        OrderResponse res = orderService.createOrder(request.toServiceRequest(), fixedWhen);
+
+        // then - 총액만 검증하므로 나머지는 굳이 확인하지 않음
+        assertThat(res.getTotalPrice()).isEqualTo(4000);
+        assertThat(res.getRegisteredDateTime()).isEqualTo(fixedWhen);
+    }
+
 
     // builder 패턴을 사용하여 given에 주어진 정보가 너무 길어 -> 테스트에 필요한 정보와 필요하지 않은 정보를 구분해서
     // 테스트를 깔끔하게 문서 형태로 작성하기 위해 Product를 만드는 도우미 메서드 생성

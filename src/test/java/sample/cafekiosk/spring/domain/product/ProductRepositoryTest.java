@@ -8,6 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import sample.cafekiosk.test.fixture.ProductFixtures;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -44,6 +45,27 @@ class ProductRepositoryTest {
                         tuple("002", "카페라떼", HOLD)
                 );
     }
+
+    // Fixture: 판매 상태만 입력값으로 제어(그 외 필드는 기본값)
+    @Test
+    @DisplayName("원하는 판매 상태를 가진 상품들을 조회한다 - Fixture 버전")
+    void findAllBySellingStatusIn_withFixture() {
+        // given
+        Product product1 = ProductFixtures.withStatus(SELLING);
+        Product product2 = ProductFixtures.withStatus(HOLD);
+        Product product3 = ProductFixtures.withStatus(STOP_SELLING);
+        productRepository.saveAll(List.of(product1, product2, product3));
+
+        // when
+        List<Product> products = productRepository.findAllBySellingStatusIn(List.of(SELLING, HOLD));
+
+        // then
+        assertThat(products)
+            .hasSize(2)
+            .extracting("sellingStatus")
+            .containsExactlyInAnyOrder(SELLING, HOLD);
+    }
+
 
     @DisplayName("상품번호 리스트로 상품을 조회한다.")
     @Test
